@@ -1,0 +1,111 @@
+
+import java.util.*;
+
+class Task 
+{
+	Project p; // pointer of Project class
+	// Declaring variables to be used, and named according to their functions i.e the values they are holding
+	int id , time , staff,i;
+	String name;
+	int earliestStart , latestStart, slack;
+    LinkedList<Task> outEdges, inEdges;
+	int x = 0;
+	Task t;
+	int earliestCompletion, latestCompletion;
+	boolean active; // it is used when to check cyclic
+
+	public Task(int id, String name, int time, int staff){ // Constructor of the class Task 
+
+		this.id = id;
+		this.name = name;
+		this.time = time;
+		this.staff = staff;
+		outEdges = new LinkedList<Task>();
+		active = false;
+	}
+
+	public Task(int id){ // Constructor of the class Task
+		 t = p.tasks[id-1];
+         this.id = id;
+	}
+
+
+	public void addEdge(int id){ // adds a task identified by id to outEdges
+
+
+		outEdges.add(new Task(id));
+	}
+
+	public LinkedList<Task> getOutEdges() { // Returns outEdges
+
+		return outEdges;
+	}
+
+	public int getTaskid(Task t){  // Returns task id by taking task as a parameter
+		return t.id;
+
+	}
+	public int getId(){ // Return an id
+		return id;
+	}
+	public Task getTask(){ // Returns a task t
+		return t;
+	}
+
+	public int getEarliestStart(){ // Returns an earliestStart
+		return earliestStart;
+	}
+
+	public void setEarliestStart(int earliestStart){ // sets an earliestStart
+		this.earliestStart = earliestStart;
+
+	}
+
+	public int getlLatestStart (){ // Returns latestStart
+		return latestStart;
+	}
+
+	public void setLatestStart(int latestStart){ // sets latestStart
+		this.latestStart = latestStart;
+
+	}
+
+
+	public int getEarliestCompletion (){ // Returns earliestCompletion
+		return earliestCompletion;
+	}
+
+	public void setEarliestCompletion(int earliestCompletion){ // sets earliestCompletion
+		this.earliestCompletion = earliestCompletion;
+
+	}
+
+	public int getLatestCompletion (){ // Returns latestCompletion
+		return latestCompletion;
+	}
+
+	public void setLatestCompletion(int latestCompletion){ // sets latestCompletion
+		this.latestCompletion = latestCompletion;
+
+	}
+
+	public int getTime(){ // Returns Time
+		return time;
+	}
+
+	public String getName(){ // Returns name
+		return name;
+	}
+	public int getStaff(){ // Returns staff
+		return staff;
+	}
+
+	public void setSlack(int slack){ // sets Slack
+		this.slack = slack;
+	}
+	public int getSlack(){ // Returns Slack
+		return slack;
+	}
+
+
+} // End of class Task

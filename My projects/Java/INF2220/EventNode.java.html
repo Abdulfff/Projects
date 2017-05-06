@@ -1,0 +1,104 @@
+/**
+
+    I implemented this class with the concept of converting the Activity node graph into Event node graph,
+    in Data Structures and Algorith Analysis in java by Mark Allen Weiss page 381.
+    Event nodes are double as Activity node plus two. Each Activity node is represented two event node i.e Real and Dummy events
+    Real events are weighted task time (that is read from the input file) Dummy events are weighted by Zero.
+
+*/
+
+
+import java.util.*;
+
+public class EventNode
+{
+	// Declaring variables to be used, and named according to their functions i.e the values they are holding
+	int id,time, earliestCompletion, latestCompletion;
+	EventNode event;
+    LinkedList<EventNode> inEdges;
+    private LinkedList<EventNode> outEdges;
+    
+    public EventNode(int id){ // Constructor of the class EventNode
+    	
+    	this.id = id;
+        inEdges = new LinkedList<EventNode>();
+        outEdges = new LinkedList<EventNode>();
+        setEarliestCompletion(0);
+        setLatestCompletion(Integer.MAX_VALUE);
+    }
+
+    public EventNode(EventNode event, int time){ // Another constructor of the class EventNode
+            
+        this.event = event;
+        this.time = time;
+    
+    }
+
+
+    public void addToOutEdge(EventNode event, int time){ // adds outEdge from this event to another event, Edges are weighted by time.
+        
+        event.addInEdge(this, time);
+        outEdges.add(new EventNode(event, time));
+    }
+
+    public void addInEdge(EventNode event, int time){ // adds inEdge
+         inEdges.add(new EventNode(event, time));
+    }
+
+
+    /**
+		The following methods are Geters and Seters and they returns and sets the variables according to their names.
+    */
+    public void setEarliestCompletion(int earliestCompletion){ 
+    	this.earliestCompletion = earliestCompletion;
+    }
+    public int getEarliestCompletion(){
+    	return earliestCompletion;
+    }
+
+    public int getLatestCompletion(){
+    	return latestCompletion;
+    }
+    public void setLatestCompletion(int latestCompletion){
+    	this.latestCompletion = latestCompletion;
+    }
+
+    public EventNode getEvent(){
+    	return event;
+    }
+
+    public int getTime(){
+    	return time;
+    }
+    public void setTime(int time){
+    	this.time = time;
+
+    }
+
+    public int getId(){
+    	return id;
+    }
+
+    public void setoutEdges(LinkedList<EventNode> outEdges){
+    	this.outEdges = outEdges;
+    }
+
+    public void setInEdges(LinkedList<EventNode> inEdges){
+    	this.inEdges = inEdges;
+    }
+
+    public LinkedList<EventNode> getoutEdges(){
+    	return outEdges;
+    }
+
+    public LinkedList<EventNode> getInEdges(){
+    	return inEdges;
+    }
+
+
+
+
+
+
+} // End of EventNode class
+

@@ -1,0 +1,42 @@
+
+class Oblig2 
+{
+    
+    static String filename = "";
+    public static void main(String[] args){
+
+    	if (args.length != 2){ // the progam takes a text file and manpower as parameter
+
+            System.out.println(" USAGE: > java Oblig2 <filename.txt> manpower ");
+            return; 
+        }
+        
+        filename = args[0]; // file name 
+        int manpower = Integer.parseInt(args[1]); // manpower
+
+        Project proj = new Project(); // Creating object of the Project class to access its methods
+        
+        proj.read(); // reads the text file first and creates Tasks and its dependencies
+
+        if(!proj.cyclic()){ // if the graph has cyclic, finds the cyclic and the program will terminate
+
+            System.out.println("\n The program will Exit ... \n");
+            System.exit(0);
+        }
+        else{ // Otherwise plans an idle time schedule as the assignment suggests 
+
+        proj.createEventEdge();
+        proj.printAllActivity();
+        proj.printCriticalTasks();
+       
+
+
+        }
+        
+
+   
+
+
+	} // End of Main Method
+
+}// End of class Oblig2

@@ -1,0 +1,7 @@
+Navn: Abdullahi Ibrahim
+Brukenavn: Abdullia
+
+1. Parallellitet
+Det er sortering og fletting som går parallell i programmet mitt, men innlesning av filen og skriving til fil når sortering og fletting er ferdig, går ikke i parallell men lineart. Fordi sortering og fletting er gjorte ved hjelp av tråder dermed går de i parallell.2.Kjøretiden
+Jeg har test kjøretiden med names filen som er 5163 ord:Med 10 tråder tar nesten mellom 0,027 til 0,039 sekunder.Med 60 tråder tar nesten mellom 0,047 til 0,058 sekunder.Med 1000 tråder tar nesten mellom 0,269 til 0,285 sekunder.Jeg har også testet kjøretiden med sowpods filen som er 267751 ord og observert med følgene:Med 100 tråder tar nesten mellom 0,611 til 0,638 sekunder.Med 10 tråder tar nesten mellom 4,163 til 4,368 sekunder.Med 100000 tråder tar nesten mellom 35 sekunder.
+Så etter den test kjøretiden som jeg har gjort observert jeg at effektiviteten kommer an på antall ord og antall tråder. Med færre tråder for eksempel  i filen sowpods med 10 tråder tar nesten 4 sekunder mens 100 tråder tar det 0,6 sekunder og det er mer slik som 100000 tar det 35 sekunder nesten. Her er det klart å bruke antall tråder medium er best i dette tilfellet 100 tråder. Fordi når det er mer tråder, må trådene vent for at sorteringen skjer synkronisert.

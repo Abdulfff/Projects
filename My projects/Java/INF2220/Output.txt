@@ -1,0 +1,665 @@
+The output of buildhouse1
+************************
+
+[abdullia@ditmarsken Oblig2]$ javac *.java
+[abdullia@ditmarsken Oblig2]$ java Oblig2 buildhouse1.txt 8
+
+	List of Tasks and Their Information 
+
+ID:                   1
+NAME:                 Build-walls
+TIME:                 4
+STAFF:                2
+EARLYTIME:            8
+LASTTIME:             8
+SLACK:                0
+
+Dependency 2
+Dependency 3
+
+ID:                   2
+NAME:                 Build-roofs
+TIME:                 6
+STAFF:                4
+EARLYTIME:            14
+LASTTIME:             14
+SLACK:                0
+
+Dependency 3
+Dependency 4
+Dependency 7
+
+ID:                   3
+NAME:                 Put-on-wallpapers
+TIME:                 1
+STAFF:                2
+EARLYTIME:            15
+LASTTIME:             18
+SLACK:                3
+
+Dependency 8
+
+ID:                   4
+NAME:                 Put-on-tiles
+TIME:                 1
+STAFF:                3
+EARLYTIME:            15
+LASTTIME:             22
+SLACK:                7
+
+ Has No dependancy! 
+
+ID:                   5
+NAME:                 Build-foundation
+TIME:                 4
+STAFF:                2
+EARLYTIME:            4
+LASTTIME:             4
+SLACK:                0
+
+Dependency 1
+Dependency 6
+
+ID:                   6
+NAME:                 Make-floor
+TIME:                 2
+STAFF:                2
+EARLYTIME:            6
+LASTTIME:             14
+SLACK:                8
+
+Dependency 7
+
+ID:                   7
+NAME:                 Put-carpet-floor
+TIME:                 4
+STAFF:                2
+EARLYTIME:            18
+LASTTIME:             18
+SLACK:                0
+
+Dependency 8
+
+ID:                   8
+NAME:                 Move-in
+TIME:                 4
+STAFF:                4
+EARLYTIME:            22
+LASTTIME:             22
+SLACK:                0
+
+ Has No dependancy! 
+The following Tasks are Critical ...
+
+Task No:		Task Name:
+
+1			Build-walls
+2			Build-roofs
+5			Build-foundation
+7			Put-carpet-floor
+8			Move-in
+
+       THE TIME SCHEDULE OF THE PROJECT EXCUTION  
+
+Time: 0
+         Starting: 5
+    Current Staff: 2
+
+Time: 4
+         Starting: 1
+         Finished: 5
+         Starting: 6
+    Current Staff: 4
+
+Time: 6
+         Finished: 6
+    Current Staff: 2
+
+Time: 8
+         Finished: 1
+         Starting: 2
+    Current Staff: 4
+
+Time: 14
+         Finished: 2
+         Starting: 3
+         Starting: 4
+         Starting: 7
+    Current Staff: 7
+
+Time: 15
+         Finished: 3
+         Finished: 4
+    Current Staff: 2
+
+Time: 18
+         Finished: 7
+         Starting: 8
+    Current Staff: 4
+
+Time: 22
+         Finished: 8
+    Current Staff: 0
+
+
+**** Shortest possible project execution is 22 ****
+____________________________________________________________________________________________________
+
+
+The output of buildhouse2
+************************
+
+[abdullia@ditmarsken Oblig2]$ javac *.java
+[abdullia@ditmarsken Oblig2]$ java Oblig2 buildhouse2.txt 12
+
+ Project is not realizable  The following Cycle has been Found 
+
+Build-walls <- Put-on-wallpapers <- Make-floor <- Build-walls
+
+ The program will Exit ... 
+
+
+
+The output of buildrail
+***********************
+
+[abdullia@ditmarsken Oblig2]$ javac *.java
+[abdullia@ditmarsken Oblig2]$ java Oblig2 buildrail.txt 12
+
+	List of Tasks and Their Information 
+
+ID:                   1
+NAME:                 Install-pavement
+TIME:                 20
+STAFF:                10
+EARLYTIME:            206
+LASTTIME:             218
+SLACK:                12
+
+ Has No dependancy! 
+
+ID:                   2
+NAME:                 Install-railing
+TIME:                 7
+STAFF:                10
+EARLYTIME:            12
+LASTTIME:             218
+SLACK:                206
+
+ Has No dependancy! 
+
+ID:                   3
+NAME:                 Install-ticketmachine
+TIME:                 1
+STAFF:                10
+EARLYTIME:            64
+LASTTIME:             218
+SLACK:                154
+
+ Has No dependancy! 
+
+ID:                   4
+NAME:                 Paint-tower-1-with-arch
+TIME:                 15
+STAFF:                6
+EARLYTIME:            134
+LASTTIME:             218
+SLACK:                84
+
+ Has No dependancy! 
+
+ID:                   5
+NAME:                 Paint-tower-2
+TIME:                 12
+STAFF:                6
+EARLYTIME:            136
+LASTTIME:             218
+SLACK:                82
+
+ Has No dependancy! 
+
+ID:                   6
+NAME:                 Paint-trusses
+TIME:                 27
+STAFF:                6
+EARLYTIME:            213
+LASTTIME:             218
+SLACK:                5
+
+ Has No dependancy! 
+
+ID:                   7
+NAME:                 Paint-cables-and-rods
+TIME:                 18
+STAFF:                6
+EARLYTIME:            204
+LASTTIME:             218
+SLACK:                14
+
+ Has No dependancy! 
+
+ID:                   8
+NAME:                 Put-lane-tunnel-and-intersection
+TIME:                 12
+STAFF:                7
+EARLYTIME:            63
+LASTTIME:             206
+SLACK:                143
+
+Dependency 3
+Dependency 31
+
+ID:                   9
+NAME:                 Setup-barrack
+TIME:                 3
+STAFF:                10
+EARLYTIME:            3
+LASTTIME:             3
+SLACK:                0
+
+Dependency 10
+Dependency 11
+Dependency 12
+Dependency 14
+Dependency 16
+Dependency 17
+
+ID:                   10
+NAME:                 Prepare-storage
+TIME:                 2
+STAFF:                4
+EARLYTIME:            5
+LASTTIME:             211
+SLACK:                206
+
+Dependency 2
+
+ID:                   11
+NAME:                 Rig-ramspace-reinforcing
+TIME:                 1
+STAFF:                4
+EARLYTIME:            4
+LASTTIME:             9
+SLACK:                5
+
+Dependency 18
+Dependency 19
+Dependency 20
+
+ID:                   12
+NAME:                 Build-tunnel
+TIME:                 30
+STAFF:                12
+EARLYTIME:            33
+LASTTIME:             176
+SLACK:                143
+
+Dependency 13
+
+ID:                   13
+NAME:                 Clean-tunnel
+TIME:                 18
+STAFF:                12
+EARLYTIME:            51
+LASTTIME:             194
+SLACK:                143
+
+Dependency 8
+
+ID:                   14
+NAME:                 Build-intersection
+TIME:                 25
+STAFF:                12
+EARLYTIME:            28
+LASTTIME:             174
+SLACK:                146
+
+Dependency 15
+
+ID:                   15
+NAME:                 Clean-intersection
+TIME:                 20
+STAFF:                12
+EARLYTIME:            48
+LASTTIME:             194
+SLACK:                146
+
+Dependency 8
+
+ID:                   16
+NAME:                 Build-towerfoundation-1
+TIME:                 35
+STAFF:                12
+EARLYTIME:            38
+LASTTIME:             49
+SLACK:                11
+
+Dependency 21
+
+ID:                   17
+NAME:                 Build-towerfoundation-2
+TIME:                 45
+STAFF:                12
+EARLYTIME:            48
+LASTTIME:             48
+SLACK:                0
+
+Dependency 22
+
+ID:                   18
+NAME:                 Make-armouring-tower-1
+TIME:                 40
+STAFF:                4
+EARLYTIME:            44
+LASTTIME:             49
+SLACK:                5
+
+Dependency 21
+
+ID:                   19
+NAME:                 Make-armouring-tower-2
+TIME:                 25
+STAFF:                4
+EARLYTIME:            29
+LASTTIME:             48
+SLACK:                19
+
+Dependency 22
+
+ID:                   20
+NAME:                 Make-armouring-arch
+TIME:                 12
+STAFF:                4
+EARLYTIME:            16
+LASTTIME:             156
+SLACK:                140
+
+Dependency 23
+
+ID:                   21
+NAME:                 Encase-and-armour-tower-1
+TIME:                 15
+STAFF:                5
+EARLYTIME:            59
+LASTTIME:             64
+SLACK:                5
+
+Dependency 24
+
+ID:                   22
+NAME:                 Encase-and-armour-tower-2
+TIME:                 16
+STAFF:                5
+EARLYTIME:            64
+LASTTIME:             64
+SLACK:                0
+
+Dependency 25
+
+ID:                   23
+NAME:                 Encase-and-armour-arch
+TIME:                 30
+STAFF:                5
+EARLYTIME:            46
+LASTTIME:             186
+SLACK:                140
+
+Dependency 26
+
+ID:                   24
+NAME:                 Cast-tower-1
+TIME:                 60
+STAFF:                7
+EARLYTIME:            119
+LASTTIME:             124
+SLACK:                5
+
+Dependency 4
+Dependency 27
+
+ID:                   25
+NAME:                 Cast-tower-2
+TIME:                 60
+STAFF:                7
+EARLYTIME:            124
+LASTTIME:             124
+SLACK:                0
+
+Dependency 5
+Dependency 27
+
+ID:                   26
+NAME:                 Cast-arch
+TIME:                 20
+STAFF:                7
+EARLYTIME:            66
+LASTTIME:             206
+SLACK:                140
+
+Dependency 31
+
+ID:                   27
+NAME:                 Stretch-two-maincables
+TIME:                 25
+STAFF:                10
+EARLYTIME:            149
+LASTTIME:             149
+SLACK:                0
+
+Dependency 28
+Dependency 29
+
+ID:                   28
+NAME:                 Build-truss-1-with-rods
+TIME:                 30
+STAFF:                10
+EARLYTIME:            179
+LASTTIME:             186
+SLACK:                7
+
+Dependency 1
+Dependency 6
+Dependency 7
+Dependency 30
+
+ID:                   29
+NAME:                 Build-truss-2-with-rods
+TIME:                 37
+STAFF:                10
+EARLYTIME:            186
+LASTTIME:             186
+SLACK:                0
+
+Dependency 1
+Dependency 6
+Dependency 7
+Dependency 30
+
+ID:                   30
+NAME:                 Cast-lane-on-truss
+TIME:                 20
+STAFF:                7
+EARLYTIME:            206
+LASTTIME:             206
+SLACK:                0
+
+Dependency 31
+
+ID:                   31
+NAME:                 Polish-lane-on-arch
+TIME:                 12
+STAFF:                7
+EARLYTIME:            218
+LASTTIME:             218
+SLACK:                0
+
+ Has No dependancy! 
+The following Tasks are Critical ...
+
+Task No:		Task Name:
+
+9			Setup-barrack
+17			Build-towerfoundation-2
+22			Encase-and-armour-tower-2
+25			Cast-tower-2
+27			Stretch-two-maincables
+29			Build-truss-2-with-rods
+30			Cast-lane-on-truss
+31			Polish-lane-on-arch
+
+       THE TIME SCHEDULE OF THE PROJECT EXCUTION  
+
+Time: 0
+         Starting: 9
+    Current Staff: 10
+
+Time: 3
+         Finished: 9
+         Starting: 10
+         Starting: 11
+         Starting: 12
+         Starting: 14
+         Starting: 16
+         Starting: 17
+    Current Staff: 56
+
+Time: 4
+         Finished: 11
+         Starting: 18
+         Starting: 19
+         Starting: 20
+    Current Staff: 64
+
+Time: 5
+         Starting: 2
+         Finished: 10
+    Current Staff: 70
+
+Time: 12
+         Finished: 2
+    Current Staff: 60
+
+Time: 16
+         Finished: 20
+         Starting: 23
+    Current Staff: 61
+
+Time: 28
+         Finished: 14
+         Starting: 15
+    Current Staff: 61
+
+Time: 29
+         Finished: 19
+    Current Staff: 57
+
+Time: 33
+         Finished: 12
+         Starting: 13
+    Current Staff: 57
+
+Time: 38
+         Finished: 16
+    Current Staff: 45
+
+Time: 44
+         Finished: 18
+         Starting: 21
+    Current Staff: 46
+
+Time: 46
+         Finished: 23
+         Starting: 26
+    Current Staff: 48
+
+Time: 48
+         Finished: 15
+         Finished: 17
+         Starting: 22
+    Current Staff: 29
+
+Time: 51
+         Starting: 8
+         Finished: 13
+    Current Staff: 24
+
+Time: 59
+         Finished: 21
+         Starting: 24
+    Current Staff: 26
+
+Time: 63
+         Starting: 3
+         Finished: 8
+    Current Staff: 29
+
+Time: 64
+         Finished: 3
+         Finished: 22
+         Starting: 25
+    Current Staff: 21
+
+Time: 66
+         Finished: 26
+    Current Staff: 14
+
+Time: 119
+         Starting: 4
+         Finished: 24
+    Current Staff: 13
+
+Time: 124
+         Starting: 5
+         Finished: 25
+         Starting: 27
+    Current Staff: 22
+
+Time: 134
+         Finished: 4
+    Current Staff: 16
+
+Time: 136
+         Finished: 5
+    Current Staff: 10
+
+Time: 149
+         Finished: 27
+         Starting: 28
+         Starting: 29
+    Current Staff: 20
+
+Time: 179
+         Finished: 28
+    Current Staff: 10
+
+Time: 186
+         Starting: 1
+         Starting: 6
+         Starting: 7
+         Finished: 29
+         Starting: 30
+    Current Staff: 29
+
+Time: 204
+         Finished: 7
+    Current Staff: 23
+
+Time: 206
+         Finished: 1
+         Finished: 30
+         Starting: 31
+    Current Staff: 13
+
+Time: 213
+         Finished: 6
+    Current Staff: 7
+
+Time: 218
+         Finished: 31
+    Current Staff: 0
+
+
+**** Shortest possible project execution is 218 ****
+
+
+

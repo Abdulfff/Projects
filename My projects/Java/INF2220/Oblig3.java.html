@@ -1,0 +1,212 @@
+import java.util.*;
+import java.io.*;
+
+
+class Oblig3{
+
+    public static void main(String[] args){
+		
+		String needle =""; // initializing the needle 
+		String haystack=""; // initializing the haystack
+		int hlen = 0;
+		int nlen = 0;
+		
+		needle = readFileNeedle(args[0]); // assigning the read pattern into needle
+		nlen = needle.length();
+
+		try{
+
+			haystack = readFileHaystack(args[1]);  // assigning the read text into haystack
+			String haystackTrim = haystack.trim(); // removing the spaces
+			hlen= haystackTrim.length();
+			
+		}
+
+		// Hanldling the potential errors that can result reading
+		catch (FileNotFoundException e) {
+			System.out.println("file not found");
+			System.exit(0);
+		} catch (NoSuchElementException e) {
+			
+			System.out.println("file not found");
+			System.exit(0);
+		}
+		
+
+		// Handling an empty needle
+		if ( needle.length()==0 ){
+			System.out.println("needle  is empty");
+			return ;  
+		}
+
+		// Handling an empty haystack
+		if (haystack.length()==0 ){
+			System.out.println(" haystack is empty");
+			return;  
+		}
+
+		// Handling in case the needle is greater than haystack
+		if (nlen > hlen ){
+			System.out.println("needle greater than haystack");
+			System.exit(0);
+			
+		}
+				
+		// create an object of the class StringMatch and giving the needle and  haystack as parameter
+      	StringMatch stringMatcher = new StringMatch(needle, haystack);
+		
+		// puting the found result into list
+		List<Integer> ll = stringMatcher.findMatch(needle, haystack);
+		
+		// printing the matched text with pattern and its position
+		for(Integer g : ll){
+			System.out.println();
+			System.out.println(" Matched text is from position:: "+ g);
+			System.out.println(" Matched text is   : " + new String(haystack).substring(g,g+needle.length()) + "       ");
+			System.out.println();
+		}
+		
+   }// end of main method
+
+
+   	public static String readFileHaystack(String str) throws FileNotFoundException{ // reading the haystack file
+		String data = "";
+		Scanner scan = new Scanner(new File(str));
+
+		// here i used StringBuilder to get exact position or index of the text 
+		// becasue scanner will not count the new line, tap or spaces
+		// with help of append in the String Builder new lines, taps and spaces will be counted as position
+		// that is why i have used append and string builder.
+		StringBuilder haystack = new StringBuilder(); 
+		while (scan.hasNextLine()) {
+			haystack.append(scan.nextLine()).append("\n");
+			haystack.append("\n");
+		}
+		scan.close();
+		data = haystack.toString();
+		return data;
+	} // end of readFileHaystack
+
+	public static String readFileNeedle(String f){  // reading the needle file
+	    String filename = f;
+	    String data = ""; 
+       Scanner scan = null;
+		try 
+		{
+			 scan = new Scanner(new File(filename)); 
+	        while (scan.hasNext())
+	        {
+				data += scan.nextLine();
+				
+			}
+			
+		}
+		//handling the potential errors while reading the file
+		catch(FileNotFoundException ioexception){
+			System.out.println("FileNotFoundException");
+			System.exit(0);
+		}
+		catch (IndexOutOfBoundsException e){
+			System.out.println("IndexOutOfBoundsException!");
+		}
+		catch(NumberFormatException e){
+			System.out.println("Number Format Exception.....");
+		}
+		scan.close();
+		return data;	
+	} //end of readFileNeedle
+
+}// end of Oblig3
+
+
+/**
+StringMatch class
+**/
+
+class StringMatch{
+
+    private String needle;
+    private String haystack;
+    private int[]  badCharShift;      
+
+    StringMatch(String needle, String haystack){
+		this.needle = needle;
+		this.haystack = haystack;
+
+		int end = 0 ; // last character of the needle or pattern
+		int offset = 0; // charater after the last "_" and it is where to start
+		
+		// generates the end
+		for (int i = needle.length()-1; i >= 0; i--){
+		    if(needle.charAt(i) != '_'){
+				end = i;
+				break;
+		    }
+		}
+
+		// generates the offset
+		for (int i = end -1 ; i>=0; i--){
+		     if(needle.charAt(i) == '_'){
+			 offset = i + 1;
+			 break;
+		     }
+		}
+
+		 String returNeedle = (new String(needle).substring(offset,end+1)); // returns the last character(s) of the needle which is not "_".
+		 																	// and if needle contains only "_" characters it will return one "_".
+		
+
+		 //creating badCharShift Array.
+		 this.badCharShift = new int[256]; // assume 1-byte characters
+
+		for(int i = 0 ; i < badCharShift.length; i++){
+		    badCharShift[i] = returNeedle.length();
+		}
+		
+		for(int i = 0; i < returNeedle.length()-1; ++i){
+		    badCharShift[returNeedle.charAt(i)] = returNeedle.length() - (i + 1); 
+		}
+		
+    }// end of constructor
+
+    
+    public  List<Integer> findMatch(String needle, String haystack){ // Finds the matcher text
+
+    boolean checkMatch = false; // used to check whether a match text was found.
+    List<Integer> list  = new ArrayList<>();
+
+	int offset = 0;
+	int last = needle.length() -1;
+
+	while(last <= haystack.length() -1){ // goes through all the haystack text.
+		
+	    for(int j = needle.length() -1, scan = last; scan>=offset; scan--,j--){ // goes until the length of the needle
+
+			if(needle.charAt(j) != haystack.charAt(scan) && needle.charAt(j) != '_'){
+
+			    offset = offset + badCharShift[haystack.charAt(scan)]; // increase the next starting point i.e offset
+			    last = last + badCharShift[haystack.charAt(scan)]; // move the needle to the right.
+			   	break;
+			}
+			if(scan == offset){	// match found 
+				checkMatch = true; // set it to true because match was found
+				list.add(offset); // add into the list for later printing
+			    offset++;		 // increment the offset
+			    last++;			 // increment the last
+			}
+			 		
+	    }
+
+	}
+	
+	if(checkMatch == false){
+		System.out.println(" No Match found !!! ");
+	}	
+		
+		return list;
+    } // end of findMatch
+
+    
+}// end of StringMatch class
+
+

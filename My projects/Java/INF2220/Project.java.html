@@ -1,0 +1,417 @@
+/**
+	This class is project manager class that contains and manipulates the most important activities in this project
+	it contains methods that are : reading the file, event edges creation, calculating  earliest start time and latest start time.
+	it also contains methods that are finding the slacks, checking cyclic, printing outputs that assignments asks 
+	and other methods that supports these main funcions.
+*/
+
+import java.io.*;
+import java.util.*;
+
+class Project
+{
+	
+	static String filnavn = Oblig2.filename; // file name to be read.
+	int num_tasks; // number of tasks 
+    static Task[] tasks;   // stores all the tasks of the project
+    static EventNode[] events; // stores all the events both the Dummy and the Real.
+    ArrayList<Integer> topoEdgeOrder;  // stores projects topologicalOrder
+    
+	public void read(){
+
+		 Scanner scan = null;  // creating scanning variable and initializeing to null.
+        try 
+		{
+		    scan = new Scanner(new File(filnavn));
+		}
+		catch(FileNotFoundException ioexception){  // Handling possible  error while reading the file.(this one specially when the file is not found!)
+			System.out.println("FileNotFoundException");
+			System.exit(0);
+		}
+		catch (IndexOutOfBoundsException e){
+			System.out.println("IndexOutOfBoundsException!");
+		}
+		catch(NumberFormatException e){
+			System.out.println("Number Format Exception.....");
+		}
+
+        num_tasks = Integer.parseInt(scan.nextLine()); // number of tasks that are read from the file
+        scan.nextLine(); // handling the empty line
+
+        // create tasks array and setting its size.
+        tasks = new Task[num_tasks];
+
+        // initialization of variable that holds taks info.
+        int i = 0;
+        int time = 0;
+        int staff = 0;
+        String name = "";
+
+        // creating task objects and passing its info. as parameter.
+        for (i=1; i<=num_tasks; i++)
+            tasks[i-1] = new Task(i, name, time, staff);
+
+        // Reading info. of tasks by going through tasks array.
+        for (Task t : tasks){
+            // Read info on each task one at a time from the file and assigning it. 
+            String strline = scan.nextLine();
+            String[] temp = strline.split("\\s+");
+            i = Integer.parseInt(temp[0]);
+            t.id = i;
+            name = temp[1];
+            t.name = name;
+            time = Integer.parseInt(temp[2]);
+            t.time = time;
+            staff = Integer.parseInt(temp[3]);
+            t.staff = staff;
+
+            // Read the dependancies and add to edges
+            for (int j=4; j<temp.length; j++) {      
+                int depen = Integer.parseInt(temp[j]);
+                if(depen!= 0){
+              	  t.addEdge(depen);	
+            	}
+
+            }
+        }
+        
+
+        // Create an array to store a topological order of the project
+        topoEdgeOrder = new ArrayList<Integer>();
+	
+	} // end of read method
+
+    public EventNode getDummyEvent(int id) {  // Returns the dummy event
+        
+        return events[2*id-2];
+    }
+
+    public EventNode getRealEvent(int id) { // Returns the real 
+        
+        return events[2*id-1];
+    }
+
+    public Task getTask(int id){ // Returns a Task spiciified by Id
+		 return tasks[id-1];
+    }
+
+    public void createEventEdge(){ // creates all the events both the Real and Dummy
+
+        events = new EventNode[2*num_tasks+2];  // creating events array that stores both Real and Dummy Events.
+        for (int id=1; id<=num_tasks; id++) {
+
+            events[2*id-2] = new EventNode(id); //  Dummy Events:  its time are equal to Zero.
+            events[2*id-1] = new EventNode(id); //  Real  Events:  its time are equal to time of the task.
+
+            EventNode realEvent = getRealEvent(id);
+            int realEventTime =   getTask(id).getTime();
+
+            // adding Dummy events to the outEdges.
+            getDummyEvent(id).addToOutEdge(realEvent,  realEventTime);
+            
+        }
+
+        for (Task t: tasks){
+            for(Task e: t.outEdges){
+	            EventNode dummyEvent = getDummyEvent(t.id);  
+	            int dummyEventTime = 0;
+	            // adding Real events to the outEdges.
+	            getRealEvent(e.getId()).addToOutEdge(dummyEvent, dummyEventTime);  
+            }
+        }
+            
+         // Adding the last two events in the events array which are dummy events for the completion of the project. 
+        events[2*num_tasks] = new EventNode(0);
+        events[2*num_tasks+1] = new EventNode(0);
+
+        EventNode realEvent = getRealEvent(num_tasks+1);
+        getDummyEvent(num_tasks+1).addToOutEdge(realEvent, 0);
+        
+        for (int i=0; i<2*num_tasks; i++)
+            events[i].addToOutEdge(getDummyEvent(num_tasks+1), 0);
+
+        
+        topoEdgeOrder.add(num_tasks+1);            
+
+    } // end of createEventEdge
+    
+
+    /*
+       I have used the following rule as a reference in the book " Data Structures and Algorith Analysis in java by Mark Allen Weiss page 382"
+       When calculating Earliest Start Time.
+
+       	EC1 = 0
+		ECw = max (ECv + cv,w) (v,w)∈E
+    */
+
+    public void getEarliestStartTimes() { // Finding the earliest start times of the all tasks by going through topoEdgeOrder and setting 
+    									  // Earliest Completion and Earliest Start
+
+		for (Integer id : topoEdgeOrder){
+            EventNode[] events = 
+            {
+                getDummyEvent(id), getRealEvent(id)
+            };
+        
+	    	for(EventNode ee: events){ // going through events
+
+	    		for (EventNode e : ee.getoutEdges()){ // geting outEdges
+	    			
+	    			int nTime = ee.getEarliestCompletion() + e.getTime();
+
+                    int oTime = e.getEvent().getEarliestCompletion();
+
+                    
+                    e.getEvent().setEarliestCompletion(max(oTime, nTime)) ;
+                }
+	    	}
+	    }
+        for (Task t : tasks){ // setting Earliest Completion and Earliest Start
+
+            t.setEarliestCompletion( getRealEvent(t.getId()).getEarliestCompletion());
+
+            t.setEarliestStart(  t.getEarliestCompletion() - t.getTime());
+        }
+
+        
+    }
+
+
+    public  int max(int x, int y){ // Used by Earliest Completion
+        int returMax; 
+        if(x > y){
+            returMax = x;
+        }else{
+            returMax = y;
+        }
+        return returMax;
+    }
+
+    public  int min(int x, int y){ // Used by Latest Completion
+        int returMin;
+        if(x < y){
+            returMin = x;
+        }else{
+            returMin = y;
+        }
+        return returMin;
+
+    }
+
+
+	/*
+       I have used the following rule as a reference in the book " Data Structures and Algorith Analysis in java by Mark Allen Weiss page 383"
+       When calculating Latest Start Time.
+
+       	LCn = ECn
+       	LCv = min (LCw − cv,w)
+    */
+    public void getLatestStartTimes(){ // Finding the latest start times of the all tasks by going through topoEdgeOrder but in reverse order 
+    									  // and setting Latest Completion and Latest Start
+
+        // For last event, latest and earliest times are equal
+        EventNode lastEvent = getRealEvent(topoEdgeOrder.get(num_tasks));
+
+        lastEvent.setLatestCompletion(lastEvent.getEarliestCompletion());     
+        
+        // Make a reverse of topological order of the Edges
+        
+		Collections.reverse(topoEdgeOrder);
+        
+        for (Integer id : topoEdgeOrder) {
+        
+            EventNode[] events = {
+            	getRealEvent(id), getDummyEvent(id)
+            };
+            for (EventNode e : events){
+
+                for (EventNode eNode : e.getInEdges()){
+                    //System.out.println("uuuuuu "+ p.getId());
+                    int oldTime = eNode.getEvent().getLatestCompletion();
+                    int newTime = e.getLatestCompletion() - eNode.getTime();
+                    eNode.getEvent().setLatestCompletion(min(oldTime, newTime));
+                } 
+            }
+        }
+
+        for (Task t : tasks){ // setting Latest Completion and Latest Start
+            t.setLatestCompletion( getRealEvent(t.getId()).getLatestCompletion() );
+            t.setLatestStart( t.getLatestCompletion() - t.getTime() );
+        }
+    }
+
+    
+    /*
+       I have used the following rule as a reference in the book " Data Structures and Algorith Analysis in java by Mark Allen Weiss page 383"
+       When calculating Slack.
+       	Slack(v,w) = LCw − ECv − cv,w
+    */
+    
+    public void findSlack(){ // this method calculates the slack
+
+        for (Task t : tasks)
+        	t.setSlack(t. getlLatestStart() - t.getEarliestStart());
+    }
+
+    /**
+        The following methods finds a cycle in the graph if any, and it prints the names of the task or Activity nodes that are part of the cycle.
+        It finds the cycle by using depth first search(DFS) algorithm. it goes through all the tasks and its edges in topological order and stores
+        in arrayList and marks as visited if the same task or activity node comes again a cycle has been detected and then prints all the tasks or 
+        activity nodes that are involved in the cycle. 
+        */
+        
+        
+    public boolean cyclic(){ // finds cycle
+        
+        ArrayList<Task> temparray = new ArrayList<Task>(); // stores the visited tasks
+        for (Task task : tasks){
+            if (!temparray.contains(task)){
+                temparray.add(task);
+                temparray = visitedNodes(temparray, task);
+                if (temparray == null) {
+                    // Current node is part of a cycle
+                    System.out.println(" <- " + task.name); // print the name of the task becasuse it is part of the cycle 
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public ArrayList<Task> visitedNodes (ArrayList<Task> temparray, Task task) { // finds Cycle.
+        
+        task.active = true;  // Mark current task as visited
+        
+        for (Task e : task.outEdges) { // go through all edges
+        	
+            Task t = e.getTask(); // get the task of e and store t 
+            if (t.active) { // if t is already visited a cycle has been found and the project is not realizable
+            
+                System.out.println("\n Project is not realizable  The following Cycle has been Found \n");
+                System.out.print(t.name);
+                return null;
+            }
+            if (!temparray.contains(t)) { // if t is not in the temparray put it and visit new tasks recursivly
+               
+                temparray.add(t);
+                temparray = visitedNodes(temparray, t);
+                if (temparray == null) { 
+                   
+                    System.out.print(" <- " + t.name); // print the name of the t becasuse it is part of the cycle
+                    return null;
+                }
+            }
+        }
+        
+        task.active = false; // set the task not visited
+        topoEdgeOrder.add(task.getId()); // put task into the topoEdgeOrder
+        return temparray;
+    }
+
+
+	/**
+        The following methods prints all the printing requirements as the assignment suggested. 
+    */
+    
+
+
+
+    public void printAllActivity(){ // prints tasks and it information
+    	
+    	getEarliestStartTimes();
+        getLatestStartTimes();
+        findSlack();
+        System.out.println("\n\tList of Tasks and Their Information ");
+    	for(Task t: tasks){
+    		System.out.println("\nID:                   "+ t.getId());
+    		System.out.println("NAME:                 "+ t.getName());
+            System.out.println("TIME:                 "+ t.getTime());
+    		System.out.println("STAFF:                "+ t.getStaff());
+    		System.out.println("EARLYTIME:            "+t.getEarliestCompletion());
+            System.out.println("LASTTIME:             "+t.getLatestCompletion());
+            System.out.println("SLACK:                "+t.getSlack());
+            System.out.println();
+            printDependency(t);
+    	}
+    }
+
+    public void printCriticalTasks(){ // prints critical tasks i.e when the slack of a specific taks is equal to ZERO.
+    								  // goes through all the tasks and prints whose have 0 in its slack.		 
+        System.out.println("The following Tasks are Critical ...\n");
+        System.out.println("Task No:"+"\t\t" + "Task Name:\n");
+        for (Task t : tasks){
+            if (t.slack == 0)
+                System.out.println( + t.id + "\t\t\t" + t.name);
+        }
+        printProjectExcution(0,0,0,true);
+
+    }
+
+    
+    public void printProjectExcution(int time, int finishTask, int currentStaff, boolean status){ // prints the schedule of the project
+        
+        System.out.println("\n       THE TIME SCHEDULE OF THE PROJECT EXCUTION  "+ "\n");
+
+        for(int i = finishTask; i<num_tasks;){ 
+
+            status = true;
+            for (Task t : tasks) {
+                if (t.getEarliestStart() == time) {// checking whether t earliest time = to time.
+                    if (status) {
+                        System.out.println("Time: " + time);
+                        status = false;
+                    }
+                    System.out.println("         Starting: " + t.id);
+                    
+                    currentStaff += t.staff;
+                }
+                if (t.getEarliestCompletion() == time) {
+                    if (status) {
+                        System.out.println("Time: " + time);
+                        status = false;
+                    }
+                    System.out.println("         Finished: " + t.id);
+                    
+                    i++; // incriment the loop here
+                    currentStaff -= t.staff;
+
+                }
+            }
+
+            if (!status)
+                System.out.println("    Current Staff: " + currentStaff+"\n");
+             time++;
+        }
+
+        System.out.format("\n**** Shortest possible project" + " execution is %d ****\n\n", time-1);
+    }
+
+    public void printDependency(Task task){ // prints the dependencies
+    	boolean tt = true;
+    	for(Task t: tasks) // go through all the tasks
+    		for(Task e: t.getOutEdges()){ // geting outEdges of task t and put it into e
+
+    			if(task == e.getTask()){ 
+    				if(tt)
+    					tt = false;
+    					System.out.println("Dependency "+ t.getId());// print dependencey of specific task t.
+    				}
+    		}
+    		
+    		if(tt) System.out.println(" Has No dependancy! ");
+
+
+    	
+    }
+
+
+
+
+
+
+
+
+
+} // end of class Project
+
+
